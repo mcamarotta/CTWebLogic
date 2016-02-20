@@ -50,6 +50,19 @@ public class DataCombination {
 		
 		return Arrays.equals(this.combination.toArray(),otherObj.combination.toArray());
 	}
+
+	@Override
+	public String toString() {
+		
+		String res = "DataCombination [ ";
+		for (String string : combination) {
+			res=res+string+", ";
+		}
+		res=res+"]";
+		return res;
+	}
+	
+	
 	
 	
 

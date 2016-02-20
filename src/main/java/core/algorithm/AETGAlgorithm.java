@@ -1,7 +1,5 @@
 package core.algorithm;
 
-import java.util.Vector;
-
 import core.Algorithm;
 import core.Combination;
 import core.SetCustom;

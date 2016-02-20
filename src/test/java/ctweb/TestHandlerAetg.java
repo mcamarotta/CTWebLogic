@@ -1,8 +1,11 @@
 package ctweb;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.fail;
+//import static org.junit.Assert.assertArrayEquals;
+//import static org.junit.Assert.fail;
 
+import org.testng.annotations.Test;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -11,21 +14,27 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
-import com.tngtech.java.junit.dataprovider.DataProvider;
-import com.tngtech.java.junit.dataprovider.UseDataProvider;
-import com.tngtech.java.junit.dataprovider.DataProviderRunner;
+import datatypes.EnumAlgorithmNames;
+
+//import org.junit.Test;
+//import org.junit.runner.RunWith;
+
+//import com.tngtech.java.junit.dataprovider.DataProvider;
+//import com.tngtech.java.junit.dataprovider.UseDataProvider;
+//import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 
 import datatypes.DataCombination;
 import datatypes.DataVariableAndValues;
 import handler.handlerCombinationCTWebNewLogic;
 
-@RunWith(DataProviderRunner.class)
+
 public class TestHandlerAetg {
 
-	@DataProvider
+	@DataProvider(name="setUpDataForTests")
 	public static Object[][] setUpDataForTests() throws Exception {
 
 		//reading all the files on the files test directories. This directory has one level of tree. 
@@ -37,7 +46,7 @@ public class TestHandlerAetg {
 			throw new Exception("There is no files on the directory or something happens when reading the files");
 			
 		//The variables to return at the end.
-		Object[][] variablesAndExpectedResults = new Object[files.size()][3];
+		Object[][] variablesAndExpectedResults = new Object[files.size()][4];
 		String algorithmName=null;
 		ArrayList<DataVariableAndValues> variableAndValues;
 		ArrayList<DataCombination> combinationsExpected;
@@ -122,9 +131,10 @@ public class TestHandlerAetg {
 					combinationsExpected.add(constructDataCombinationFromStringFormatedOnTheLegacyWay(line));
 				}
 			}
-			variablesAndExpectedResults[ii][0]=algorithmName;
-			variablesAndExpectedResults[ii][1]=variableAndValues;
-			variablesAndExpectedResults[ii][2]=combinationsExpected;
+			variablesAndExpectedResults[ii][0]=EnumAlgorithmNames.valueOf(algorithmName);
+			variablesAndExpectedResults[ii][1]=path;
+			variablesAndExpectedResults[ii][2]=variableAndValues;
+			variablesAndExpectedResults[ii][3]=combinationsExpected;
 			ii++;
 			
 		}
@@ -133,23 +143,33 @@ public class TestHandlerAetg {
 
 	}
 
-	@Test
-	@UseDataProvider("setUpDataForTests")
-	public void PlayExampleFromOldCTWeb(String algorithmName, ArrayList<DataVariableAndValues> variableAndValues,
+	@Test(dataProvider="setUpDataForTests")
+	public void testTheCombination(EnumAlgorithmNames algorithmName,Path filePath, ArrayList<DataVariableAndValues> variableAndValues,
 			ArrayList<DataCombination> combinationsExpected) {
 
 		ArrayList<DataCombination> combinations=null;
 		switch (algorithmName) {
-		case "simplePairwise":
+		
+		case allCombinations:
+			combinations = handlerCombinationCTWebNewLogic.getPairWiseCombinationWithAllCombination(variableAndValues);
+			break;
+		case eachChoice:
+			combinations = handlerCombinationCTWebNewLogic.getPairWiseCombinationWithEachChoice(variableAndValues);
+			break;
+			
+		case simplePairwise:
 			combinations = handlerCombinationCTWebNewLogic.getPairWiseCombinationWithSimplePairWise(variableAndValues);
 			break;
-
+		case prow:
+			combinations = handlerCombinationCTWebNewLogic.getPairWiseCombinationWithProwFirstStep(variableAndValues);
+			break;
+			
 		}
 		
-//		if(combinations==null){
-//			fail("No combinatios was calculate on this case. Something happens, maybe with the name of algorithm on the file related");
-//		}
-		assertArrayEquals(combinationsExpected.toArray(), combinations.toArray());
+		if(combinations==null){
+			Assert.fail("No combinatios was calculate on this case. Something happens, maybe with the name of algorithm on the file related");
+		}
+		Assert.assertEquals(combinationsExpected.toArray(), combinations.toArray());
 
 
 	}
