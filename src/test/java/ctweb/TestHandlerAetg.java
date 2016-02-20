@@ -1,86 +1,155 @@
 package ctweb;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.fail;
 
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.tngtech.java.junit.dataprovider.DataProvider;
+import com.tngtech.java.junit.dataprovider.UseDataProvider;
+import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 
 import datatypes.DataCombination;
 import datatypes.DataVariableAndValues;
 import handler.handlerCombinationCTWebNewLogic;
-import junit.framework.TestCase;
 
+@RunWith(DataProviderRunner.class)
 public class TestHandlerAetg {
 
-	static ArrayList<DataVariableAndValues> variableAndValues;
+	@DataProvider
+	public static Object[][] setUpDataForTests() throws Exception {
 
-	static ArrayList<DataCombination> combinationsExpected;
-
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-
-		variableAndValues = new ArrayList<DataVariableAndValues>();
-
-		combinationsExpected = new ArrayList<DataCombination>();
-
-		List<String> file = Files.readAllLines(Paths.get("C:/Users/Michel/workspace/CTWebLogic/src/test/resources/TestPlayExampleBase.txt"));
+		//reading all the files on the files test directories. This directory has one level of tree. 
 		
-		// File Format:
-		// (Variable Name, (Values,)+\n)+ --at least one value for variable)
-		// #
-		// --Combination Expected
-		// (Value,)+\n)+ -- the number of values is same of number of variables
-		// on the first part of the file. The number of lines
-		// is related with the Oracle used to calculate the expected result.
+		ArrayList<Path> files = getFiles(Paths.get("C:/Users/Michel/workspace/CTWebLogic/src/test/resources/testGoodFiles"));
+		
+		
+		if(files == null || files.isEmpty())
+			throw new Exception("There is no files on the directory or something happens when reading the files");
+			
+		//The variables to return at the end.
+		Object[][] variablesAndExpectedResults = new Object[files.size()][3];
+		String algorithmName=null;
+		ArrayList<DataVariableAndValues> variableAndValues;
+		ArrayList<DataCombination> combinationsExpected;
+			
+		//To count the rows to add on array of Objects
+		int ii=0;
+		
+		//Read and parse all the files on the directory
+		for (Path path : files) {
+				
+			variableAndValues = new ArrayList<DataVariableAndValues>();
+			combinationsExpected = new ArrayList<DataCombination>();
+	
+			List<String> file = Files.readAllLines(path);
+			
+			// File Format:
+			//Algorithm Name
+			//#
+			// (Variable Name, (Values,)+\n)+ --at least one value for variable)
+			// #
+			// --Combination Expected
+			// (Value,)+\n)+ -- the number of values is same of number of variables
+			// on the first part of the file. The number of lines
+			// is related with the Oracle used to calculate the expected result.
+	
+			// To separate the two parts of the file, Variable & Values and the
+			// Expected Result
+			
+			//Read the Name of the Algorithm which will be executed with the data on the file
+			int indexOfFinalOfAlgoritmName =file.indexOf("#");
+			
+			//To help who makes the file
+			if(indexOfFinalOfAlgoritmName==-1){
+				throw new Exception("This "+path+" do not have the first # separator, after the algorithm name");
+			}
+			
+			List<String> algorithmNamePart = file.subList(0, indexOfFinalOfAlgoritmName);
+			//is not necessary use a for structure, any way
+			for (String string : algorithmNamePart) {
+				if(!string.isEmpty())
+					algorithmName=string;
+				else
+					throw new Exception("This "+path+" has empty the algorithm name");
+			}
+			if(algorithmName==null)
+				throw new Exception("This "+path+" do not have algorithm name at the top of file");
+			
+			
+			int indexOfLastPartNumberOfCombination=file.indexOf("@");
+			if(indexOfLastPartNumberOfCombination==-1){
+				throw new Exception("This "+path+" do not have the last separator @, after the combinations. With the max number of combination");
+			}
+			//Quite the algorithm name and the separator (#) and the number of combination locate after @ separator
+			file=file.subList(indexOfFinalOfAlgoritmName+1,indexOfLastPartNumberOfCombination );
+			
+			int indexOfMidiumPart = file.indexOf("#");
+			if (indexOfMidiumPart == -1)
+				throw new Exception("This "+path+" do not have the separator # beteween the Imput and the Expected Result");
 
-		// To separate the two parts of the file, Variable & Values and the
-		// Expected Result
-
-		int indexOfMidiumPart = file.indexOf("#");
-		if (indexOfMidiumPart == -1)
-			throw new Exception("The Test File do not have the separator # beteween the Imput and the Expected Result");
-
-		List<String> firstPart = file.subList(0, indexOfMidiumPart);
-		List<String> secondPart = file.subList(file.indexOf("#") + 1, file.size());
-
-		DataVariableAndValues dataVarValues;
-		// Read the Variables and Values, it all separated by comma.
-		for (String line : firstPart) {
-			if (line.contains(",")) {
-				String[] splited = line.split(",");
-				String variableName = splited[0];
-				ArrayList<String> values = new ArrayList<String>();
-				for (int i = 1; i < splited.length; i++) {
-					String value = splited[i].trim();
-					values.add(value);
+			List<String> firstPart = file.subList(0, indexOfMidiumPart);
+			List<String> secondPart = file.subList(indexOfMidiumPart + 1,file.size());
+			//TODO:Put here the number of max combinations
+	
+			DataVariableAndValues dataVarValues;
+			// Read the Variables and Values, it all separated by comma.
+			for (String line : firstPart) {
+				if (line.contains(",")) {
+					String[] splited = line.split(",");
+					String variableName = splited[0];
+					ArrayList<String> values = new ArrayList<String>();
+					for (int i = 1; i < splited.length; i++) {
+						String value = splited[i].trim();
+						values.add(value);
+					}
+					dataVarValues = new DataVariableAndValues(variableName, values);
+					variableAndValues.add(dataVarValues);
 				}
-				dataVarValues = new DataVariableAndValues(variableName, values);
-				variableAndValues.add(dataVarValues);
 			}
-		}
-		// Read the Expected Result
-		for (String line : secondPart) {
-			if (line.contains(",")) {
-				combinationsExpected.add(constructDataCombinationFromStringFormatedOnTheLegacyWay(line));
+			// Read the Expected Result
+			for (String line : secondPart) {
+				if (line.contains(",")) {
+					combinationsExpected.add(constructDataCombinationFromStringFormatedOnTheLegacyWay(line));
+				}
 			}
+			variablesAndExpectedResults[ii][0]=algorithmName;
+			variablesAndExpectedResults[ii][1]=variableAndValues;
+			variablesAndExpectedResults[ii][2]=combinationsExpected;
+			ii++;
+			
 		}
+		return variablesAndExpectedResults;
+		
 
 	}
 
 	@Test
-	
-	public void PlayExampleFromOldCTWeb() {
+	@UseDataProvider("setUpDataForTests")
+	public void PlayExampleFromOldCTWeb(String algorithmName, ArrayList<DataVariableAndValues> variableAndValues,
+			ArrayList<DataCombination> combinationsExpected) {
 
+		ArrayList<DataCombination> combinations=null;
+		switch (algorithmName) {
+		case "simplePairwise":
+			combinations = handlerCombinationCTWebNewLogic.getPairWiseCombinationWithSimplePairWise(variableAndValues);
+			break;
 
-		ArrayList<DataCombination> combinations = handlerCombinationCTWebNewLogic.getPairWiseCombinationWithSimplePairWise(variableAndValues);
-
-		assertTrue(Arrays.equals(combinationsExpected.toArray(), combinations.toArray()));
+		}
+		
+//		if(combinations==null){
+//			fail("No combinatios was calculate on this case. Something happens, maybe with the name of algorithm on the file related");
+//		}
+		assertArrayEquals(combinationsExpected.toArray(), combinations.toArray());
 
 
 	}
@@ -109,4 +178,28 @@ public class TestHandlerAetg {
 		return combination;
 	}
 
+	/**
+	 * Return all path files from a parent directory, including all files on subfolders in deep. 
+	 * 
+	 * @param path
+	 * @return ArrayList of Path with path all files on directory and subdirectories 
+	 * @throws IOException
+	 */
+	private static ArrayList<Path> getFiles(Path path) throws IOException {
+		ArrayList<Path> files = new ArrayList<>();
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
+	        for (Path entry : stream) {
+	            if (Files.isDirectory(entry)) {
+	                files.addAll(getFiles(entry));
+	            }
+	            //Only add files!
+	            else{
+	            	
+	            	files.add(entry);
+	            }
+	        }
+	        return files;
+	    }
+	}
+	
 }
