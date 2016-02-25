@@ -1,7 +1,7 @@
 simplePairwise
 #
-A,valueA1, valueA2
-B,Boat, GrandBoat
+Var1,ValueVar11, ValueVar12
+Var2,ValueVar21, ValueVar22
 #
 {valueA1,Boat}  
 {valueA1,GrandBoat}  

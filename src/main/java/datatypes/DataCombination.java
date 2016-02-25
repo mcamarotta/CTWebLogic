@@ -12,8 +12,6 @@ public class DataCombination {
 	ArrayList<String> combination;
 
 	
-	
-	
 	public DataCombination(ArrayList<String> combination) {
 		this.combination = combination;
 	}
@@ -51,16 +49,16 @@ public class DataCombination {
 		return Arrays.equals(this.combination.toArray(),otherObj.combination.toArray());
 	}
 
-	@Override
-	public String toString() {
-		
-		String res = "DataCombination [ ";
-		for (String string : combination) {
-			res=res+string+", ";
-		}
-		res=res+"]";
-		return res;
-	}
+//	@Override
+//	public String toString() {
+//		
+//		String res = "DataCombination [ ";
+//		for (String string : combination) {
+//			res=res+string+", ";
+//		}
+//		res=res+"]";
+//		return res;
+//	}
 	
 	
 	

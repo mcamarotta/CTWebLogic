@@ -32,7 +32,7 @@ import datatypes.DataVariableAndValues;
 import handler.handlerCombinationCTWebNewLogic;
 
 
-public class TestHandlerAetg {
+public class TestAllAlgorithm {
 
 	@DataProvider(name="setUpDataForTests")
 	public static Object[][] setUpDataForTests() throws Exception {
@@ -206,7 +206,7 @@ public class TestHandlerAetg {
 	 * @throws IOException
 	 */
 	private static ArrayList<Path> getFiles(Path path) throws IOException {
-		ArrayList<Path> files = new ArrayList<>();
+		ArrayList<Path> files = new ArrayList<Path>();
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
 	        for (Path entry : stream) {
 	            if (Files.isDirectory(entry)) {

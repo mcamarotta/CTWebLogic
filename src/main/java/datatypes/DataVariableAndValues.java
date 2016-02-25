@@ -9,6 +9,8 @@ import java.util.ArrayList;
  */
 public class DataVariableAndValues {
 	
+	String variableName;
+	ArrayList<String> values;
 	
 	
 	public DataVariableAndValues(){
@@ -22,9 +24,7 @@ public class DataVariableAndValues {
 		this.values = values;
 	}
 
-	String variableName;
-	
-	ArrayList<String> values;
+
 
 	public String getVariableName() {
 		return variableName;
