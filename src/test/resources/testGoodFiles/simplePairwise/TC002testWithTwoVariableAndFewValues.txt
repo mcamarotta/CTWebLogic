@@ -8,5 +8,5 @@ Var2,ValueVar21, ValueVar22
 {valueA2,Boat}  
 {valueA2,GrandBoat}
 @
-Results for a maximum of 9289728 combinations 
+Results for a maximum of 4 combinations 
 

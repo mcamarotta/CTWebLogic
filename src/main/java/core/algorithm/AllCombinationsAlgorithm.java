@@ -11,7 +11,7 @@ public class AllCombinationsAlgorithm extends Algorithm {
 	@Override
 	public void buildCombinations() {
 		long numberOfCombinations=super.getMaxNumberOfCombinations();
-		verbose("Maximum number of combinations: " + numberOfCombinations + "<br>");
+//		verbose("Maximum number of combinations: " + numberOfCombinations + "<br>");
 		for (int i=0; i<numberOfCombinations; i++) {
 			this.selectedPositions.add(i);
 		}
@@ -22,10 +22,6 @@ public class AllCombinationsAlgorithm extends Algorithm {
 		return "All combinations";
 	}
 
-	@Override
-	public String getCredits() {
-		return "Macario Polo";
-	}
 	
 	@Override
 	public boolean requiresRegister() {

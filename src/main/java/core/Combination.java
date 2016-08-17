@@ -2,8 +2,7 @@ package core;
 
 import java.util.Vector;
 
-import core.oracle.Oracle;
-import core.oracle.ParameterValues;
+
 import core.pairwise.Pair;
 import core.pairwise.PairsTable;
 
@@ -23,54 +22,6 @@ public class Combination {
 		this.index=0;
 	}
 	
-	public String getOracle(Vector<Oracle> oracles) {
-		String result="", errors="";
-		int numberOfOracles=0, length=0;
-		for (Oracle oracle : oracles) {
-			if (!oracle.getIsOtherWiseOracle()) {
-				boolean tieneOraculo=true;
-				Vector<ParameterValues> ppvv=oracle.getParametersValues();
-				Vector<Long> values;
-				for (ParameterValues pv : ppvv) {
-					values=pv.getValuesPositions();
-					long combValue=this.positions[pv.getSetIndex()];
-					if (!values.contains(combValue)) {
-						tieneOraculo=false;
-						break;
-					}
-				}
-				
-				if (tieneOraculo) {
-					try {
-						length=result.length();
-						result=result+oracle.getOracleExpression(this.elements);
-						if (result.length()>length) {
-							numberOfOracles++;
-						}
-					} catch (Exception e) {
-						errors+="\n// " + e;
-					}
-				}
-			}
-		}
-		if (numberOfOracles==0) {
-			for (Oracle oracle : oracles) {
-				if (oracle.getIsOtherWiseOracle()) {
-					try {
-						result=result+oracle.getOracleExpression(this.elements);
-					} catch (Exception e) {
-						errors+="\n// " + e;
-					}
-				}
-			}
-		} else if (numberOfOracles>1)
-			result+="\n// Warning: more than one oracle for this test case";
-		if (result.length()==0)
-			result="\n// Warning: this test case has no oracle assigned";
-		if (errors.length()>0)
-			result+=errors;
-		return result;
-	}
 
 	public long getIndex() {
 		return index;

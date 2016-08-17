@@ -12,7 +12,7 @@ public class EachChoiceAlgorithm extends Algorithm {
 
 	@Override
 	public void buildCombinations() {
-		verbose("Marking unvisited test values<br>");
+//		verbose("Marking unvisited test values<br>");
 		Vector<Vector<Boolean>> visitados=new Vector<Vector<Boolean>>();
 		for (SetCustom s : this.sets) {
 			Vector<Boolean> vb=new Vector<Boolean>();
@@ -25,11 +25,11 @@ public class EachChoiceAlgorithm extends Algorithm {
 		procesaPreSelectedPositions(visitados);
 		
 		
-		verbose("Generating test data:<br><ol>");
+//		verbose("Generating test data:<br><ol>");
 		Random rnd=new Random();
 		while (thereAreUnvisitedElements(visitados)) {
 			Combination c=new Combination(this.sets.size());
-			verbose("<li>Generating new combination</li>");
+//			verbose("<li>Generating new combination</li>");
 			for (int i=0; i<this.sets.size(); i++) {
 				SetCustom s=this.sets.get(i);
 				int selected=-1;
@@ -43,13 +43,13 @@ public class EachChoiceAlgorithm extends Algorithm {
 				if (selected==-1)
 					selected=rnd.nextInt(vb.size());
 				c.setValuePosition(i, selected);
-				verbose("<li>Selected " + s.getElementAt(selected).toString() + "</li>");
+//				verbose("<li>Selected " + s.getElementAt(selected).toString() + "</li>");
 			}
-			verbose("</ol></li>");
+//			verbose("</ol></li>");
 			c.updateIndex(this.divisors);
 			this.selectedPositions.add(c.getIndex());
 		}
-		verbose("</ol>");
+//		verbose("</ol>");
 	}
 
 	private void procesaPreSelectedPositions(Vector<Vector<Boolean>> visitados) {
@@ -58,7 +58,7 @@ public class EachChoiceAlgorithm extends Algorithm {
 			for (int i=0; i<c.size(); i++) {
 				Vector<Boolean> vb=visitados.get(i);
 				vb.set((int) c.getPosition(i), true);
-				System.out.println("Se ha marcado " + c.getPosition(i) + " del conjunto " + i + " como visitado de la combi. " + c.getIndex());
+//				System.out.println("Se ha marcado " + c.getPosition(i) + " del conjunto " + i + " como visitado de la combi. " + c.getIndex());
 			}			
 			c.updateIndex(this.divisors);
 			this.selectedPositions.add(c.getIndex());
@@ -78,10 +78,7 @@ public class EachChoiceAlgorithm extends Algorithm {
 		return "each choice";
 	}
 
-	@Override
-	public String getCredits() {
-		return "Macario Polo and Beatriz PŽrez";
-	}
+
 	
 	@Override
 	public boolean requiresRegister() {

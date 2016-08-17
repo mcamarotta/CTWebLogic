@@ -15,7 +15,7 @@ import datatypes.DataCombination;
 
 /**
  * @author Michel Camarotta This class works like a interface between logic of
- *         pairwise algorithms and other layer which wants to use some algorithm
+ *          algorithms and other layer which wants to use some algorithm
  * 
  *         Here there are different methods to invoke the different algorithms
  *         which have different results of pairwise sets.
@@ -164,7 +164,7 @@ public final class handlerCombinationCTWebNewLogic {
 			for (int i = 0; i < howManyColums; i++) {
 				//The old combination has a set of values. This values are stored on Strings.
 				//The only thing that I need to do is iterate and copy the values to the new way, more simple. 
-				combinationNewWay.addToValueToCombination(oldWayCombination.getElements()[i].getValue().toString());
+				combinationNewWay.addValueToCombination(oldWayCombination.getElements()[i].getValue().toString());
 			}
 			resNewWayCombination.add(combinationNewWay);
 			
@@ -183,10 +183,10 @@ public final class handlerCombinationCTWebNewLogic {
 		if (algorithmName.equals(EnumAlgorithmNames.eachChoice))
 			return new EachChoiceAlgorithm();
 		if (algorithmName.equals(EnumAlgorithmNames.simplePairwise))
-			return new AETGAlgorithm();
+			return new SimpleAllPairsAlgorithm();
 		if (algorithmName.equals(EnumAlgorithmNames.prow))
 			return new PROWAlgorithm();
-		return new AETGAlgorithm();
+		return new SimpleAllPairsAlgorithm();
 	}
 
 }

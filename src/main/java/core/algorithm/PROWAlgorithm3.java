@@ -184,7 +184,7 @@ public class PROWAlgorithm3 extends Algorithm {
 
 	private Vector <Combination>  selectElementVisitingMoreCompatiblePairs(int setIndex, Vector <Combination> combs) {
 		//Busca el elemento del parametro setIndex que visita mas pares no visitados aun en el caso de prueba c
-		int result=-1;
+//		int result=-1;
 		int max=Integer.MIN_VALUE;
 		int MAXIMO_VISITAS=Integer.MIN_VALUE;
 		int MAXIMO_PESO=Integer.MIN_VALUE;
@@ -226,7 +226,7 @@ public class PROWAlgorithm3 extends Algorithm {
 				if (p!=null && (vp.get(i)>max)) {
 					caux = c.copy();
 					if (valueIsCompatible(caux, setIndex, i)) {
-						result=i;
+//						result=i;
 						max=vp.get(i);
 						MAXIMO_VISITAS=visitas;
 						MAXIMO_PESO=peso; 
@@ -244,7 +244,7 @@ public class PROWAlgorithm3 extends Algorithm {
 					if (visitas>MAXIMO_VISITAS && valueIsCompatible(c, setIndex, i)) {
 						MAXIMO_VISITAS=visitas;
 						MAXIMO_PESO=peso;
-						result=i;
+//						result=i;
 						combsAux = new Vector<Combination>();
 						caux.setValuePosition(setIndex,i);
 						combsAux.add(caux);
@@ -256,7 +256,7 @@ public class PROWAlgorithm3 extends Algorithm {
 						if (peso>=MAXIMO_PESO) {//ACA ANTES ERA SOLO MAYOR
 							MAXIMO_VISITAS=visitas;
 							MAXIMO_PESO = peso;
-							result=i; //FALTABA
+//							result=i; //FALTABA
 							caux.setValuePosition(setIndex,i);
 							combsAux.add(caux);
 							caux=c.copy();
@@ -318,7 +318,7 @@ public class PROWAlgorithm3 extends Algorithm {
 		this.initPairTable();
 		maxPairsVisited = this.sets.size()*(this.sets.size()-1)/2; //Variable global
 		int visits=0;
-		Pair p;
+//		Pair p;
 		Combination c=null;
 		this.initializeIndex();
 		//Para la primer combinaci—n
@@ -341,7 +341,7 @@ public class PROWAlgorithm3 extends Algorithm {
 	public void buildNextCombinations(){
 		int visits=0;
 		Combination c = null;
-		Pair p;
+//		Pair p;
 		do {
 			visits = 0;
 			c=this.initializeNewCombination();
@@ -368,7 +368,7 @@ public class PROWAlgorithm3 extends Algorithm {
 					}
 				}
 			}
-		} while ((p=getPairWithWeight0(pairsTables))!=null);// && c!=null && visits>0);
+		} while ((getPairWithWeight0(pairsTables))!=null);// && c!=null && visits>0);
 	}
 	
 	public int addCombination (Combination c){
@@ -486,7 +486,7 @@ public class PROWAlgorithm3 extends Algorithm {
 			selected.setValuePosition(selectedSetIndex, selectedElementIndex);
 		}else{
 			//Recorro el conjunto con mas valores y asigno uno a uno todos sus valores
-			SetCustom set=this.sets.get(this.initIndex);
+//			SetCustom set=this.sets.get(this.initIndex);
 			int pairsVisited=getPairsVisited(this.initIndex, this.initElement);
 			if (pairsVisited==0) {
 				this.initElement = this.initElement+1;
@@ -688,13 +688,6 @@ public class PROWAlgorithm3 extends Algorithm {
 			combaux.add(aux);
 		}
 		return combaux;
-	}
-
-	
-
-	@Override
-	public String getCredits() {
-		return "Beatriz PŽrez Lamancha";
 	}
 	
 	@Override

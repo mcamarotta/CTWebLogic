@@ -9,7 +9,7 @@
 package core;
 
 import java.util.Vector;
-import javax.servlet.jsp.JspWriter;
+
 
 import core.pairwise.Pair;
 import core.pairwise.PairsTable;
@@ -20,7 +20,7 @@ public abstract class Algorithm {
 	protected long maxNumberOfCombinations;
 	protected OrderedVector selectedPositions;
 	protected OrderedVector preSelectedPositions;
-	protected JspWriter out;
+
 	protected PairsTable[] pairsTables;
 
 	/**
@@ -30,7 +30,7 @@ public abstract class Algorithm {
 		this.sets=new Vector<SetCustom>();
 		this.selectedPositions=new OrderedVector();
 		this.preSelectedPositions=new OrderedVector();
-		this.out=null;
+
 	}
 
 	/**
@@ -40,31 +40,11 @@ public abstract class Algorithm {
 		this.selectedPositions.clear();
 	}
 
-	/**
-	 * Sets the web page where the execution steps will be shown.
-	 * @param out The JspWriter object where the results will be shown
-	 */
-	public void setOut(JspWriter out) {
-		this.out=out;
-	}
 	
 	public void addPreselectedCombination(long index) {
 		this.preSelectedPositions.add(index);
 	}
 
-	/**
-	 * Shows a message by the out stream, if it exists.
-	 * @param msg The message to be shown
-	 */
-	public void verbose(String msg) {
-		if (this.out!=null) {
-			try {
-				this.out.print(msg);
-				this.out.flush();
-			}
-			catch (Exception e){}
-		}
-	}
 
 	/**
 	 * Adds a set (i.e., a parameter) to the algorithm. Each set has a set of @see Element
@@ -116,7 +96,7 @@ public abstract class Algorithm {
 	}
 
 	protected void calculateDivisors() {
-		verbose("<ul><li>Calculating divisors</li><ol>");
+//		verbose("<ul><li>Calculating divisors</li><ol>");
 		this.divisors=new long[this.sets.size()];
 		for(int i=0; i<this.sets.size(); i++) {
 			long divisor=1;
@@ -124,10 +104,10 @@ public abstract class Algorithm {
 				SetCustom s=this.sets.get(j);
 				divisor=divisor*s.size();
 			}
-			verbose("<li>Divisor for set #" + i + "=" + divisor + "</li>");
+//			verbose("<li>Divisor for set #" + i + "=" + divisor + "</li>");
 			this.divisors[i]=divisor;
 		}
-		verbose("</ol></ul>");
+//		verbose("</ol></ul>");
 	}
 
 	/**
@@ -314,80 +294,7 @@ public abstract class Algorithm {
 		return result;
 	}
 
-	/**
-	 *
-	 * @return A HTML string with the pairs tables. It includes a checkbox to remove pairs (used in the CustomizedAETG Algorithm)
-	 */
-	public String showDetailedHTMLPairsTables() {
-		String r="<table><tr>";
-		int i=0;
-		for (i=0; i<this.pairsTables.length; i++) {
-			r+="<td>";
-			PairsTable pt=this.pairsTables[i];
-			r+=pt.toDetailedHTMLString(this.sets.get(pt.getIndexA()), this.sets.get(pt.getIndexB()));
-			r+="</td>";
-			if ((i+1)%3==0) {
-				r+="</tr>";
-			}
-		}
-		r+="</td></tr></table>";
-		return r;
-	}
 
-	/**
-	 *
-	 * @return A HTML String with the values in each pair table
-	 */
-	public String showHTMLPairsTables() {
-		String r="<table><tr>";
-		int i=0;
-		for (i=0; i<this.pairsTables.length; i++) {
-			r+="<td>";
-			PairsTable pt=this.pairsTables[i];
-			r+=pt.toHTMLString();
-			r+="</td>";
-			if ((i+1)%3==0) {
-				r+="</tr>";
-			}
-		}
-		r+="</td></tr></table>";
-		return r;
-	}
-
-	/**
-	 * Writes by the standard output a string with elements in each pairs table
-	 */
-	public void showPairsTables() {
-		for (int i=0; i<this.pairsTables.length; i++) {
-			pairsTables[i].show();
-		}
-	}
-
-	/**
-	 *
-	 * @return The percentage of pairs visited by this algorithm
-	 */
-	public double evaluateGoodness() {
-		double result=0;
-		this.pairsTables=this.buildPairTables();
-		for (int i=0; i<this.selectedPositions.size(); i++) {
-			long position=this.selectedPositions.get(i);
-			Combination c=this.getCombination(position);
-			c.visitPairs(this.pairsTables);
-		}
-		double totalPairs=0;
-		double visitedPairs=0;
-		for (PairsTable pt : this.pairsTables) {
-			Vector<Pair> pairs=pt.getPairs();
-			totalPairs+=pairs.size();
-			for (Pair p : pairs) {
-				if (p.weight()>0)
-					visitedPairs++;
-			}
-		}
-		result=100*visitedPairs/totalPairs;
-		return result;
-	}
 
 	/**
 	 *
@@ -412,7 +319,7 @@ public abstract class Algorithm {
 		return this.selectedPositions.size();
 	}
 	
-	public abstract String getCredits();
+
 
 	public long[] getDivisors() {
 		return divisors;

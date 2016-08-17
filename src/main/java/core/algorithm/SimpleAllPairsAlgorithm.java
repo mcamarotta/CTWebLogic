@@ -7,35 +7,36 @@ import core.pairwise.Pair;
 import core.pairwise.PairsTable;
 
 
+//TODO quitar los verbose
 
-public class AETGAlgorithm extends Algorithm {
+public class SimpleAllPairsAlgorithm extends Algorithm {
 
 	@Override
 	public void buildCombinations() {
-		verbose("Building pair tables:");
+//		verbose("Building pair tables:");
 		this.pairsTables=buildPairTables();
-		verbose(this.showHTMLPairsTables());
+		
 		
 		this.procesaPreSelectedPositions();
 
-		verbose("<ol>");
+//		verbose("<ol>");
 		Combination c=this.getCombination(0);
 		c.updateIndex(this.divisors);
-		verbose("<li><b>Adding combination #0 : " + c.toString() + "</b>");
+//		verbose("<li><b>Adding combination #0 : " + c.toString() + "</b>");
 		c.visitPairs(this.pairsTables);
-		verbose("<br>Visiting pairs:");
-		verbose(this.showHTMLPairsTables());
-		verbose("</li>");
+//		verbose("<br>Visiting pairs:");
+		
+//		verbose("</li>");
 		this.selectedPositions.add(0);
 		Combination aux=null;
 		long selectedPos=0;
-		int iteracion=0;
+//		int iteracion=0;
 		while (getPairWithWeight0(pairsTables)!=null) {
 			//System.out.println(iteracion++);
 			long MAX;
-			verbose("<li>Building new combination");
+//			verbose("<li>Building new combination");
 			Combination selected = initializeNewCombination();
-			verbose("<ol><li>Initial element positions: " + selected.toStringPositions()+"</li>");
+//			verbose("<ol><li>Initial element positions: " + selected.toStringPositions()+"</li>");
 			for (int i=0; i<this.sets.size(); i++) {
 				//System.out.println("\t" + i);
 				if (selected.getPosition(i)==-1) {
@@ -53,22 +54,22 @@ public class AETGAlgorithm extends Algorithm {
 					}
 					aux.setValuePosition(i, selectedPos);
 					selected=copy(aux);
-					verbose("<li>Modified position #" + selectedPos + ": " + selected.toStringPositions()+"</li>");
+//					verbose("<li>Modified position #" + selectedPos + ": " + selected.toStringPositions()+"</li>");
 				}
 			}
-			verbose("</ol>");
+//			verbose("</ol>");
 			selected.updateIndex(this.divisors);
-			verbose("<li>" + selected.toStringPositions() + " corresponds to combination #" + selected.getIndex() +
-					" (" + this.getCombination(selected.getIndex()).toString() + ").");
-			verbose(" <b>" + this.getCombination(selected.getIndex()).toString() + " added.</b><br>");
-			verbose("Visiting pairs:");
+//			verbose("<li>" + selected.toStringPositions() + " corresponds to combination #" + selected.getIndex() +
+//					" (" + this.getCombination(selected.getIndex()).toString() + ").");
+//			verbose(" <b>" + this.getCombination(selected.getIndex()).toString() + " added.</b><br>");
+//			verbose("Visiting pairs:");
 			selected.visitPairs(this.pairsTables);
-			System.out.println(selected.toStringPositions());
-			verbose(this.showHTMLPairsTables());
-			verbose("</li>");
+//			System.out.println(selected.toStringPositions());
+			
+//			verbose("</li>");
 			this.selectedPositions.add(selected.getIndex());
 		}
-		verbose("</ol>");
+//		verbose("</ol>");
 	}
 
 	private void procesaPreSelectedPositions() {
@@ -125,15 +126,12 @@ public class AETGAlgorithm extends Algorithm {
 	public String getName() {
 		return "aetg";
 	}
-
-	@Override
-	public String getCredits() {
-		return "Macario Polo and Beatriz Pérez";
-	}
-
+	
 	@Override
 	public boolean requiresRegister() {
 		return true;
 	}
+
+
 
 }

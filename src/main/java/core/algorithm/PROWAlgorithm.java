@@ -987,12 +987,6 @@ public class PROWAlgorithm extends Algorithm {
 	}
 
 	
-
-	@Override
-	public String getCredits() {
-		return "Beatriz PŽrez Lamancha";
-	}
-	
 	@Override
 	public boolean requiresRegister() {
 		return true;

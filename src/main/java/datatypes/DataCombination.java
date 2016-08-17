@@ -28,7 +28,7 @@ public class DataCombination {
 		this.combination = combination;
 	}
 	
-	public void addToValueToCombination(String value){
+	public void addValueToCombination(String value){
 		if(this.combination ==null)
 			this.combination=new ArrayList<String>();
 		this.combination.add(value);
